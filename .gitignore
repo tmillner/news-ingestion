@@ -1,0 +1,6 @@
+09_*
+10_*
+build
+.gradle
+*.iml
+.idea
