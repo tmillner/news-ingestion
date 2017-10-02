@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.util.HashMap;
 import java.util.Map;
 
+// Maybe want to make publishedAt a time object
 public class Article {
 
     @Id
@@ -36,7 +37,7 @@ public class Article {
     }
 
     public String getAuthor() {
-        return source;
+        return author;
     }
 
     public String getSource() {

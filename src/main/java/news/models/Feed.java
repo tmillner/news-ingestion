@@ -31,6 +31,9 @@ public class Feed {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    public Feed() {
+    }
+
     @JsonProperty("status")
     public String getStatus() {
         return status;

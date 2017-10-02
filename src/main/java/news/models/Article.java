@@ -36,6 +36,18 @@ public class Article {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    public Article(news.storage.entities.Article article) {
+        this.author = article.getAuthor();
+        this.title = article.getTitle();
+        this.description = article.getDescription();
+        this.url = article.getUrl();
+        this.urlToImage = article.getUrlToImage();
+        this.publishedAt = article.getPublishedAt();
+    }
+
+    public Article() {
+    }
+
     @JsonProperty("author")
     public String getAuthor() {
         return author;
