@@ -44,12 +44,14 @@ public class StorageProcessingService implements StorageService {
         List<news.models.Article> articles = feed.getArticles();
 
         for (news.models.Article article : articles) {
-            // check data already found if not, save
+            List<?> existingArticles = repo.findByTitle(article.getTitle());
             // Ideally, would process the record and store keywords from source
-            repo.save(
-                    new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
-                            article.getUrl(), article.getUrlToImage(), article.getPublishedAt())
-            );
+            if (existingArticles.size() == 0) {
+                repo.save(
+                        new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
+                                article.getUrl(), article.getUrlToImage(), article.getPublishedAt())
+                );
+            }
         }
 
         return true;

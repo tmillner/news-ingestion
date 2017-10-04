@@ -2,6 +2,8 @@ package news.controllers;
 
 import news.models.Feed;
 import news.storage.StorageService;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class MigrateController {
     public ResponseEntity persistRecordsLocallyFromExternal() {
         log.debug("POST -- Persist of External content");
 
+        if (!isNowWithinRunTime()) return ResponseEntity.accepted().body("Unable to persist records at this time");
+
         for (String source : storageService.getSources()) {
             ResponseEntity<Feed> response = getExternalSourceRecords(source);
             storageService.store(response);
@@ -55,5 +59,27 @@ public class MigrateController {
         }
 
         return ResponseEntity.ok(feed);
+    }
+
+    /**
+     * TODO Refactor RunTime values into config
+     *
+     * @return
+     */
+    private boolean isNowWithinRunTime() {
+        int hourStart = 7;
+        int minuteStart = 5;
+        int hourEnd = 7;
+        int minuteEnd = 15;
+
+        DateTime now = DateTime.now(DateTimeZone.UTC);
+
+        if (now.getHourOfDay() >= hourStart && now.getMinuteOfDay() >= minuteStart) {
+            if (now.getHourOfDay() <= hourEnd && now.getMinuteOfDay() <= minuteEnd) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
