@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +38,22 @@ public class MigrateController {
 
         for (String source : storageService.getSources()) {
             ResponseEntity<Feed> response = getExternalSourceRecords(source);
-            storageService.store(response);
+            if (response.getStatusCode() != HttpStatus.OK) {
+                log.warn("Unable to process source results from " + source);
+            } else {
+                storageService.store(response.getBody());
+            }
         }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/persist/record")
+    @ResponseBody
+    public ResponseEntity persistRecordLocallyFromExternal(@RequestBody Feed feed) {
+        log.debug("POST -- Persist of Source-specific External content");
+
+        storageService.store(feed);
 
         return ResponseEntity.ok().build();
     }

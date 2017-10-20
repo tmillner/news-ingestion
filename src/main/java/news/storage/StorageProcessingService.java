@@ -39,18 +39,18 @@ public class StorageProcessingService implements StorageService {
     }
 
     @Override
-    public boolean store(ResponseEntity<Feed> response) {
+    public boolean store(Feed responseFeed) {
 
-        Feed feed = response.getBody();
-        String feedSource = feed.getSource();
-        List<news.models.Article> articles = feed.getArticles();
+        String feedSource = responseFeed.getSource();
+        List<news.models.Article> articles = responseFeed.getArticles();
 
         for (news.models.Article article : articles) {
             List<?> existingArticles = repo.findByTitle(article.getTitle());
 
+            log.info(existingArticles.toString());
             if (existingArticles.size() == 0) {
                 List<String> keywords = KeywordCreator.createKeywords(article);
-
+                log.info(keywords.toString());
                 repo.save(
                         new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
                                 article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), keywords)
@@ -108,7 +108,7 @@ public class StorageProcessingService implements StorageService {
             List<String> keywords = new ArrayList<>();
 
             Matcher m = pattern.matcher(article.getTitle());
-            while(m.find()) {
+            while (m.find()) {
                 keywords.add(m.group());
             }
 

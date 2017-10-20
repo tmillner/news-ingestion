@@ -7,3 +7,4 @@ TODO :
 - Attribute credit to provided api
 - Refactor with lombok
 - Specify default mongo db + setup external db
+- ++batch script to add historical data to DB (use existing endpoint)
