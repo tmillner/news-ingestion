@@ -3,6 +3,7 @@ package news.storage.entities;
 import org.springframework.data.annotation.Id;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // Maybe want to make publishedAt a time object
@@ -18,11 +19,12 @@ public class Article {
     public String url;
     public String urlToImage;
     public String publishedAt;
+    public List<String> keywords;
     public Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 
     public Article(String source, String author, String title, String description,
-                   String url, String urlToImage, String publishedAt) {
+                   String url, String urlToImage, String publishedAt, List<String> keywords) {
         this.source = source;
         this.author = author;
         this.title = title;
@@ -30,6 +32,7 @@ public class Article {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+        this.keywords = keywords;
     }
 
     public String getId() {
@@ -64,6 +67,10 @@ public class Article {
         return publishedAt;
     }
 
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
     public Map<String, Object> getAdditionalProperties() {
         return additionalProperties;
     }
@@ -71,8 +78,8 @@ public class Article {
     @Override
     public String toString() {
         return String.format(
-                "Article[ id=%s, source=%s, author=%s, title=%s, description=%s, url=%s, publishedAt=%s ]",
-                id, source, author, title, description, url, publishedAt
+                "Article[ id=%s, source=%s, author=%s, title=%s, description=%s, url=%s, publishedAt=%s, keywords=%s ]",
+                id, source, author, title, description, url, publishedAt, keywords
         );
     }
 }

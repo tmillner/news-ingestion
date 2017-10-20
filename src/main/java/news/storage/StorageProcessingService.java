@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,11 +47,13 @@ public class StorageProcessingService implements StorageService {
 
         for (news.models.Article article : articles) {
             List<?> existingArticles = repo.findByTitle(article.getTitle());
-            // Ideally, would process the record and store keywords from source
+
             if (existingArticles.size() == 0) {
+                List<String> keywords = KeywordCreator.createKeywords(article);
+
                 repo.save(
                         new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
-                                article.getUrl(), article.getUrlToImage(), article.getPublishedAt())
+                                article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), keywords)
                 );
             }
         }
@@ -94,5 +98,21 @@ public class StorageProcessingService implements StorageService {
     public List<news.models.Article> getArticles(String source, String from, String to) {
         List<Article> articles = repo.findBySourcePublishedAtBetween(source, from, to);
         return articles.stream().map(news.models.Article::new).collect(Collectors.toList());
+    }
+
+    private static class KeywordCreator {
+        private static final String regexPattern = "([-A-Z]\\w+\\s?)+";
+        private static Pattern pattern = Pattern.compile(regexPattern);
+
+        public static List<String> createKeywords(news.models.Article article) {
+            List<String> keywords = new ArrayList<>();
+
+            Matcher m = pattern.matcher(article.getTitle());
+            while(m.find()) {
+                keywords.add(m.group());
+            }
+
+            return keywords;
+        }
     }
 }
