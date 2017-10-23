@@ -10,7 +10,7 @@ public interface StorageService {
 
     boolean storeLocally(ResponseEntity<Feed> response);
 
-    boolean store(Feed response);
+    String store(Feed response);
 
     boolean isValidSource(String source);
 

@@ -39,7 +39,8 @@ public class StorageProcessingService implements StorageService {
     }
 
     @Override
-    public boolean store(Feed responseFeed) {
+    public String store(Feed responseFeed) {
+        Integer recordsProcessed = 0;
 
         String feedSource = responseFeed.getSource();
         List<news.models.Article> articles = responseFeed.getArticles();
@@ -55,10 +56,11 @@ public class StorageProcessingService implements StorageService {
                         new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
                                 article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), keywords)
                 );
+                recordsProcessed++;
             }
         }
 
-        return true;
+        return String.format("Processed %s records ", recordsProcessed);
     }
 
     @Override

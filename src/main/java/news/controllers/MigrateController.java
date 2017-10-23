@@ -53,9 +53,9 @@ public class MigrateController {
     public ResponseEntity persistRecordLocallyFromExternal(@RequestBody Feed feed) {
         log.debug("POST -- Persist of Source-specific External content");
 
-        storageService.store(feed);
+        String msg = storageService.store(feed);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(msg);
     }
 
     @GetMapping("/source/{source:.+}/records")
