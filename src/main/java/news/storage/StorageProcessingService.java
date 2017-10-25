@@ -50,7 +50,7 @@ public class StorageProcessingService implements StorageService {
 
             log.info(existingArticles.toString());
             if (existingArticles.size() == 0) {
-                List<String> keywords = KeywordCreator.createKeywords(article);
+                List<String> keywords = KeywordCreator.createKeywords(article, storageProperties.getKeywordBlacklist());
                 log.info(keywords.toString());
                 repo.save(
                         new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
@@ -106,12 +106,22 @@ public class StorageProcessingService implements StorageService {
         private static final String regexPattern = "([-A-Z]\\w+\\s?)+";
         private static Pattern pattern = Pattern.compile(regexPattern);
 
-        public static List<String> createKeywords(news.models.Article article) {
+        public static List<String> createKeywords(news.models.Article article, List<String> blacklist) {
             List<String> keywords = new ArrayList<>();
 
             Matcher m = pattern.matcher(article.getTitle());
             while (m.find()) {
-                keywords.add(m.group());
+                boolean addKeyword = true;
+                String keyword = m.group().trim();
+
+                for(String blacklistedKeyword : blacklist) {
+                    if (keyword.equalsIgnoreCase(blacklistedKeyword.trim())) {
+                        addKeyword = false;
+                        break;
+                    }
+                }
+                // Store all keywords in lowercase 
+                if (addKeyword == true) keywords.add(keyword.toLowerCase());
             }
 
             return keywords;
