@@ -120,7 +120,7 @@ public class StorageProcessingService implements StorageService {
                         break;
                     }
                 }
-                // Store all keywords in lowercase 
+                // Store all keywords in lowercase
                 if (addKeyword == true) keywords.add(keyword.toLowerCase());
             }
 
