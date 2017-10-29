@@ -13,6 +13,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .anyRequest().permitAll()
-                .antMatchers("/api/external/persist").access("hasIpAddress('127.0.0.1/8080')");
+                .antMatchers("/api/external/persist/*").access("hasIpAddress('127.0.0.1/8080')");
     }
 }

@@ -7,6 +7,7 @@ import os
 k = os.getenv("NEWSAPI_KEY")
 
 if k == None:
+  print("Env var 'NEWSAPI_KEY' not defined. Exiting")
   exit()
 else:
   url = "https://newsapi.org/v1/articles?apiKey=" + k + "&sortBy=latest&source="

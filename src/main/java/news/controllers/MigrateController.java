@@ -83,16 +83,12 @@ public class MigrateController {
      */
     private boolean isNowWithinRunTime() {
         int hourStart = 7;
-        int minuteStart = 5;
-        int hourEnd = 7;
-        int minuteEnd = 15;
+        int hourEnd = 9;
 
         DateTime now = DateTime.now(DateTimeZone.UTC);
 
-        if (now.getHourOfDay() >= hourStart && now.getMinuteOfDay() >= minuteStart) {
-            if (now.getHourOfDay() <= hourEnd && now.getMinuteOfDay() <= minuteEnd) {
-                return true;
-            }
+        if (now.getHourOfDay() > hourStart && now.getHourOfDay() < hourEnd) {
+            return true;
         }
 
         return false;
