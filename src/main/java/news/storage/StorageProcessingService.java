@@ -96,9 +96,9 @@ public class StorageProcessingService implements StorageService {
     }
 
     @Override
-    public List<news.models.Article> getArticles(String source, String from, String to) {
+    public List<Article> getArticles(String source, String from, String to) {
         List<Article> articles = repo.findBySourcePublishedAtBetween(source, from, to);
-        return articles.stream().map(news.models.Article::new).collect(Collectors.toList());
+        return articles;
     }
 
     private static class KeywordCreator {

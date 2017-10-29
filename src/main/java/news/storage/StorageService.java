@@ -1,6 +1,6 @@
 package news.storage;
 
-import news.models.Article;
+import news.storage.entities.Article;
 import news.models.Feed;
 import org.springframework.http.ResponseEntity;
 

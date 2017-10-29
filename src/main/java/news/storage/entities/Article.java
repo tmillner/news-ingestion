@@ -1,25 +1,43 @@
 package news.storage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.annotation.Id;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Maybe want to make publishedAt a time object
+@JsonPropertyOrder({
+        "author",
+        "title",
+        "description",
+        "url",
+        "urlToImage",
+        "publishedAt"
+})
 public class Article {
 
     @Id
     public String id;
 
     public String source;
+    @JsonProperty("author")
     public String author;
+    @JsonProperty("title")
     public String title;
+    @JsonProperty("description")
     public String description;
+    @JsonProperty("url")
     public String url;
+    @JsonProperty("urlToImage")
     public String urlToImage;
+    @JsonProperty("publishedAt")
     public String publishedAt;
+    @JsonProperty("keywords")
     public List<String> keywords;
+    @JsonIgnore
     public Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 
@@ -39,6 +57,7 @@ public class Article {
         return id;
     }
 
+    @JsonProperty("author")
     public String getAuthor() {
         return author;
     }
@@ -47,26 +66,32 @@ public class Article {
         return source;
     }
 
+    @JsonProperty("title")
     public String getTitle() {
         return title;
     }
 
+    @JsonProperty("description")
     public String getDescription() {
         return description;
     }
 
+    @JsonProperty("url")
     public String getUrl() {
         return url;
     }
 
+    @JsonProperty("urlToImage")
     public String getUrlToImage() {
         return urlToImage;
     }
 
+    @JsonProperty("publishedAt")
     public String getPublishedAt() {
         return publishedAt;
     }
 
+    @JsonProperty("keywords")
     public List<String> getKeywords() {
         return keywords;
     }
