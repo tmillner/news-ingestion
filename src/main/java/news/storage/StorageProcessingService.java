@@ -95,7 +95,6 @@ public class StorageProcessingService implements StorageService {
         return false;
     }
 
-    // Maybe this is slow ???
     @Override
     public List<news.models.Article> getArticles(String source, String from, String to) {
         List<Article> articles = repo.findBySourcePublishedAtBetween(source, from, to);
