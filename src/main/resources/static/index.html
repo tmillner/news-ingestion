@@ -29,7 +29,6 @@ body {
   width: 94%;
 }
 
-
 #footer {
   position: absolute;
   right: 0;
@@ -84,6 +83,77 @@ body {
 <body>
 <script> 
 d3.select("body").style("background-color", "#d6f5f5");
+
+/* breathing colors */
+var colors = ["#f4ffff", "#d6f5f5"];
+
+var recolor = function() {
+	var c = colors.shift();
+	colors.push(c);
+
+	d3.select("body")
+	.transition()
+	.duration(20000)
+	.style("background-color", c)
+	.each("end", recolor);
+};
+
+recolor();
+
+/* data */
+var data = [
+  {
+    "author": "Al Jazeera",
+    "title": "Cambodian opposition MPs flee from crackdown",
+    "description": "About half the country's opposition members of parliament have left as government vows more arrests over alleged coup.",
+    "url": "http://www.aljazeera.com/news/2017/09/cambodian-opposition-mps-flee-crackdown-170930063024925.html",
+    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/3c2280a13b6f438da4eb5183147ec88e_18.jpg",
+    "publishedAt": "2017-09-30T07:56:11Z",
+    "id": "59f59454a453e91400f5bb4f",
+    "source": "al-jazeera-english",
+    "keywords": [
+      "cambodian",
+      "mps"
+    ]
+  },
+  {
+    "author": "Al Jazeera",
+    "title": "Puerto Rican mayor begs for aid after Hurricane Maria",
+    "description": "Angry mayor of San Juan accuses Trump administration of 'killing us with the inefficiency' as desperation grows.",
+    "url": "http://www.aljazeera.com/news/2017/09/puerto-rican-mayor-begs-aid-hurricane-maria-170930064704078.html",
+    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/8999ba37017c4a988f5a3ffe556e933c_18.jpg",
+    "publishedAt": "2017-09-30T07:04:30Z",
+    "id": "59f59454a453e91400f5bb50",
+    "source": "al-jazeera-english",
+    "keywords": [
+      "puerto rican",
+      "hurricane maria"
+    ]
+  },
+  {
+    "author": "Al Jazeera",
+    "title": "Trump's tax cuts: For the rich or for the poor?",
+    "description": "We speak to economist Arthur Laffer about President Trump's plans for tax cuts, and we debate democracy in Rwanda.",
+    "url": "http://www.aljazeera.com/programmes/upfront/2017/09/tax-cuts-drive-economic-growth-inequality-170929142819252.html",
+    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/29/7d20a3b3a156434daac317c1bae746a6_18.jpg",
+    "publishedAt": "2017-09-30T06:50:02Z",
+    "id": "59f59454a453e91400f5bb51",
+    "source": "al-jazeera-english",
+    "keywords": [
+      "trump",
+      "for"
+    ]
+  }
+];
+
+/* process data into useable format */
+for (var d in data) {
+    for (var k in data[d].keywords) {
+        var o = {"source": data[d].source, "publishedAt": data[d].publishedAt, "keyword":data[d].keywords[k], "url":data[d].url, "title":data[d].title};
+    	console.log(o);
+    }
+}
+
 </script>
 
 <div class="app">
