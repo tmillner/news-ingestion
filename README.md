@@ -8,3 +8,4 @@ TODO :
 - Fix bug with Today button (date clicker)
 - Setup domain name
 - i18n-ize
+- Logging?
