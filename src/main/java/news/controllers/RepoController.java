@@ -40,19 +40,28 @@ public class RepoController {
                                                @PathVariable String to) {
         log.debug("GET -- Repo content");
 
+        String validFrom = from;
+        String validTo = to;
+
         if (!storageService.isValidSource(source)) return ResponseEntity.notFound().build();
         if (!storageService.isValidTimestamp(from) || !storageService.isValidTimestamp(to)) {
-            return ResponseEntity.badRequest().build();
+            // If just a date try to format with time
+            validFrom += "T00:00:00Z";
+            validTo += "T23:59:59Z";
+
+            if (!storageService.isValidTimestamp(validFrom) || !storageService.isValidTimestamp(validTo)) {
+                return ResponseEntity.badRequest().build();
+            }
         }
         // Need to make sure a user doesn't send a request > 31 days
-        DateTime dtFrom = DateTime.parse(from);
-        DateTime dtTo = DateTime.parse(to);
+        DateTime dtFrom = DateTime.parse(validFrom);
+        DateTime dtTo = DateTime.parse(validTo);
 
         Integer requestedDiff = Days.daysBetween(dtFrom, dtTo).getDays();
         if (requestedDiff > 31) {
             return ResponseEntity.badRequest().body("Sorry, range must be <= 31 days");
         }
-        List<Article> articles = storageService.getArticles(source, from, to);
+        List<Article> articles = storageService.getArticles(source, validFrom, validTo);
         log.info(articles.toString());
 
         return ResponseEntity.ok(articles);
