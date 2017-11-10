@@ -19,14 +19,15 @@ public class StorageProperties {
     Environment env;
 
     @Bean
-    public String[] getSources() {
-        return env.getProperty("sources").split(",");
+    public String getValidNewsSourcesApi() {
+        return String.format("%s",
+                env.getProperty("newsapi_sources"));
     }
 
     @Bean
-    public String getValidNewsSourceApi() {
+    public String getValidNewsArticlesApi() {
         return String.format("%s?apiKey=%s",
-                env.getProperty("newsapi"),
+                env.getProperty("newsapi_articles"),
                 env.getProperty("key"));
     }
 

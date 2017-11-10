@@ -1,8 +1,11 @@
 package news.storage;
 
 import news.models.Feed;
+import news.models.Sources;
 import news.storage.entities.Article;
 import news.storage.entities.ArticleRepository;
+import news.storage.entities.Source;
+import news.storage.entities.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +25,19 @@ import java.util.stream.Collectors;
 @Service
 public class StorageProcessingService implements StorageService {
 
-    private final ArticleRepository repo;
+    private final ArticleRepository articleRepo;
+    private final SourceRepository sourceRepo;
     private final StorageProperties storageProperties;
 
     static Logger log = LoggerFactory.getLogger(StorageProcessingService.class.getName());
 
     @Autowired
-    public StorageProcessingService(ArticleRepository articleRepository, StorageProperties storageProperties) {
-        this.repo = articleRepository;
+    public StorageProcessingService(ArticleRepository articleRepository,
+                                    SourceRepository sourceRepository,
+                                    StorageProperties storageProperties) {
+        this.articleRepo = articleRepository;
         this.storageProperties = storageProperties;
+        this.sourceRepo = sourceRepository;
     }
 
     @Override
@@ -46,13 +53,13 @@ public class StorageProcessingService implements StorageService {
         List<news.models.Article> articles = responseFeed.getArticles();
 
         for (news.models.Article article : articles) {
-            List<?> existingArticles = repo.findByTitle(article.getTitle());
+            List<?> existingArticles = articleRepo.findByTitle(article.getTitle());
 
             log.info(existingArticles.toString());
             if (existingArticles.size() == 0) {
                 List<String> keywords = KeywordCreator.createKeywords(article, storageProperties.getKeywordBlacklist());
                 log.info(keywords.toString());
-                repo.save(
+                articleRepo.save(
                         new Article(feedSource, article.getAuthor(), article.getTitle(), article.getDescription(),
                                 article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), keywords)
                 );
@@ -66,21 +73,47 @@ public class StorageProcessingService implements StorageService {
     @Override
     public boolean isValidSource(String source) {
 
+        return true;
+        /*
         for (String s : storageProperties.getSources()) {
             log.debug("SOURCE: " + s);
             if (s.equals(source)) return true;
         }
         return false;
+        */
+    }
+
+    public String storeExternalSources(Sources responseSources) {
+        Integer recordsProcessed = 0;
+
+        List<news.models.sources.Source> externalSources = responseSources.getSources();
+
+        for (news.models.sources.Source source : externalSources) {
+            List<?> existingSources = sourceRepo.findByName(source.getName());
+
+            if (existingSources.size() == 0) {
+                log.info("Storing: " + source.getName() + " since it was not found in repo");
+
+                sourceRepo.save(
+                        new Source(source.getId(), source.getName(), source.getDescription(), source.getUrl(),
+                                source.getCategory(), source.getLanguage(), source.getCountry(),
+                                source.getSortBysAvailable())
+                );
+                recordsProcessed++;
+            }
+        }
+
+        return String.format("Processed %s records ", recordsProcessed);
     }
 
     @Override
-    public String[] getSources() {
-        return storageProperties.getSources();
+    public String getValidNewsArticlesApi() {
+        return storageProperties.getValidNewsArticlesApi();
     }
 
     @Override
-    public String getValidNewsSourceApi() {
-        return storageProperties.getValidNewsSourceApi();
+    public String getValidNewsSourcesApi() {
+        return storageProperties.getValidNewsSourcesApi();
     }
 
     @Override
@@ -97,8 +130,14 @@ public class StorageProcessingService implements StorageService {
 
     @Override
     public List<Article> getArticles(String source, String from, String to) {
-        List<Article> articles = repo.findBySourcePublishedAtBetween(source, from, to);
+        List<Article> articles = articleRepo.findBySourcePublishedAtBetween(source, from, to);
         return articles;
+    }
+
+    @Override
+    public List<Source> getSources() {
+        List<Source> sources = sourceRepo.findAll();
+        return sources;
     }
 
     private static class KeywordCreator {
@@ -113,7 +152,7 @@ public class StorageProcessingService implements StorageService {
                 boolean addKeyword = true;
                 String keyword = m.group().trim();
 
-                for(String blacklistedKeyword : blacklist) {
+                for (String blacklistedKeyword : blacklist) {
                     if (keyword.equalsIgnoreCase(blacklistedKeyword.trim())) {
                         addKeyword = false;
                         break;

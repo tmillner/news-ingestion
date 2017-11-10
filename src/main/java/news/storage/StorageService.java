@@ -1,7 +1,9 @@
 package news.storage;
 
+import news.models.Sources;
 import news.storage.entities.Article;
 import news.models.Feed;
+import news.storage.entities.Source;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -14,9 +16,13 @@ public interface StorageService {
 
     boolean isValidSource(String source);
 
-    String[] getSources();
+    String getValidNewsArticlesApi();
 
-    String getValidNewsSourceApi();
+    String getValidNewsSourcesApi();
+
+    List<Source> getSources();
+
+    String storeExternalSources(Sources response);
 
     boolean isValidTimestamp(String timestamp);
 

@@ -1,7 +1,10 @@
 package news.controllers;
 
+import news.models.Feed;
+import news.models.Sources;
 import news.storage.StorageService;
 import news.storage.entities.Article;
+import news.storage.entities.Source;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.slf4j.Logger;
@@ -31,6 +34,30 @@ public class RepoController {
     public RepoController(StorageService storageService, RestTemplateBuilder restTemplateBuilder) {
         this.storageService = storageService;
         this.restTemplate = restTemplateBuilder.build();
+    }
+
+    @GetMapping("/sources")
+    @ResponseBody
+    public ResponseEntity getSources() {
+        log.debug("GET -- Sources");
+
+        List<Source> sources = storageService.getSources();
+
+        // Make external call and persist results locally if we don't have sources
+        if (sources.size() == 0) {
+            try {
+                Sources externalSources = restTemplate.getForObject(storageService.getValidNewsSourcesApi(), Sources.class);
+                log.info("Response is " + externalSources);
+
+                storageService.storeExternalSources(externalSources);
+                sources = storageService.getSources();
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
+
+        return ResponseEntity.ok(sources);
     }
 
     @GetMapping("/{source}/{from}/{to:.+}")

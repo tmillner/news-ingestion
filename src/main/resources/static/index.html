@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <title></title>
 <head>
-<style>
+    <style>
 html {
   height: 100%;
   box-sizing: border-box;
@@ -40,14 +40,15 @@ body {
   text-align: center;
 }
 
-</style>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+    </style>
 
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
 	/** Set up date picker **/
 	var options = {
 		showButtonPanel: true,
@@ -70,173 +71,212 @@ body {
 		$( "#to_datepicker" ).datepicker( "setDate", "-0d" );
 	})
 
-</script>
-<script>
 
-</script>
+    </script>
+    <script>
 
-
-<script src="https://d3js.org/d3.v3.min.js"></script>
+    </script>
 
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
 </head>
 <body>
+
 <script> 
-d3.select("body").style("background-color", "#d6f5f5");
+  d3.select("body").style("background-color", "#d6f5f5");
 
-/* breathing colors */
-var colors = ["#f4ffff", "#d6f5f5"];
+  /* breathing colors */
+  var colors = ["#f4ffff", "#d6f5f5"];
 
-var recolor = function() {
-	var c = colors.shift();
-	colors.push(c);
+  var recolor = function() {
+    var c = colors.shift();
+    colors.push(c);
 
-	d3.select("body")
-	.transition()
-	.duration(20000)
-	.style("background-color", c)
-	.each("end", recolor);
-};
+    d3.select("body")
+    .transition()
+    .duration(20000)
+    .style("background-color", c)
+    .each("end", recolor);
+  };
 
-recolor();
+  recolor();
 
-/* data */
-var data = [
-  {
-    "author": "Al Jazeera",
-    "title": "Cambodian opposition MPs flee from crackdown",
-    "description": "About half the country's opposition members of parliament have left as government vows more arrests over alleged coup.",
-    "url": "http://www.aljazeera.com/news/2017/09/cambodian-opposition-mps-flee-crackdown-170930063024925.html",
-    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/3c2280a13b6f438da4eb5183147ec88e_18.jpg",
-    "publishedAt": "2017-09-30T07:56:11Z",
-    "id": "59f59454a453e91400f5bb4f",
-    "source": "al-jazeera-english",
-    "keywords": [
-      "cambodian",
-      "mps",
-      "test",
-      "test"
-    ]
-  },
-  {
-    "author": "Al Jazeera",
-    "title": "Puerto Rican mayor begs for aid after Hurricane Maria",
-    "description": "Angry mayor of San Juan accuses Trump administration of 'killing us with the inefficiency' as desperation grows.",
-    "url": "http://www.aljazeera.com/news/2017/09/puerto-rican-mayor-begs-aid-hurricane-maria-170930064704078.html",
-    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/8999ba37017c4a988f5a3ffe556e933c_18.jpg",
-    "publishedAt": "2017-09-30T07:04:30Z",
-    "id": "59f59454a453e91400f5bb50",
-    "source": "al-jazeera-english",
-    "keywords": [
-      "puerto rican",
-      "hurricane maria"
-    ]
-  },
-  {
-    "author": "Al Jazeera",
-    "title": "Trump's tax cuts: For the rich or for the poor?",
-    "description": "We speak to economist Arthur Laffer about President Trump's plans for tax cuts, and we debate democracy in Rwanda.",
-    "url": "http://www.aljazeera.com/programmes/upfront/2017/09/tax-cuts-drive-economic-growth-inequality-170929142819252.html",
-    "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/29/7d20a3b3a156434daac317c1bae746a6_18.jpg",
-    "publishedAt": "2017-09-30T06:50:02Z",
-    "id": "59f59454a453e91400f5bb51",
-    "source": "al-jazeera-english",
-    "keywords": [
-      "trump",
-      "for"
-    ]
-  }
-];
-
-/* process data into useable format: stores keyword in a map with an array of source data */
-var keywords = {};
-
-for (var i in data) {
-    for (var j in data[i].keywords) {
-
-    	var keyword = data[i].keywords[j];
-    	var dataToPush = { "source": data[i].source, "publishedAt": data[i].publishedAt, "title":data[i].title, "url":data[i].url };
-
-    	if (keywords[keyword] == undefined) {
-    		keywords[keyword] = [dataToPush];
-    	}
-    	else {
-    		keywords[keyword].push(dataToPush);
-    	}
-    }
-}
-console.log(keywords);
-
-
-/* rendering */
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
-
-var format = d3.format(",d");
-
-var color = d3.scaleOrdinal(d3.schemeCategory20c);
-
-var pack = d3.pack()
-    .size([width, height])
-    .padding(1.5);
-
-var root = d3.hierarchy({children: keywords})
-  .sum(function(d) { return d.value; })
-  .each(function(d) {
-    if (id = d.data.id) {
-      var id, i = id.lastIndexOf(".");
-      d.id = id;
-      d.package = id.slice(0, i);
-      d.class = id.slice(i + 1);
-    }
-  });
-
-var node = svg.selectAll(".node")
-.data(pack(root).leaves())
-.enter().append("g")
-  .attr("class", "node")
-  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-node.append("circle")
-  .attr("id", function(d) { return d.id; })
-  .attr("r", function(d) { return d.r; })
-  .style("fill", function(d) { return color(d.package); });
-
-node.append("clipPath")
-  .attr("id", function(d) { return "clip-" + d.id; })
-.append("use")
-  .attr("xlink:href", function(d) { return "#" + d.id; });
-
-node.append("text")
-  .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
-.selectAll("tspan")
-.data(function(d) { return d.class.split(/(?=[A-Z][^A-Z])/g); })
-.enter().append("tspan")
-  .attr("x", 0)
-  .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
-  .text(function(d) { return d; });
-
-node.append("title")
-  .text(function(d) { return d.id + "\n" + format(d.value); });
 
 </script>
 
 <div class="app">
-<h1> News Reader </h1>
-<br />
+    <h1> News Reader </h1>
+    <br/>
 
-<input type="text" id="from_datepicker" class="datepicker">
-<input type="text" id="to_datepicker" class="datepicker">
+    <input type="text" id="from_datepicker" class="datepicker">
+    <input type="text" id="to_datepicker" class="datepicker">
 
-<svg width="1000" height="1000" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
+    <svg width="900" height="900" font-family="sans-serif" font-size="13" text-anchor="middle"></svg>
+    <script type="text/javascript">
 
 
-<div id="footer">
-Usage credit to <a href="https://newsapi.org/">News API</a> ©
-</div>
+$("body").click(function(){
+    $.get({url: "http://localhost:8080/api/search/repo/sources", success: function(result){
+        $("div.app").html(result);
+    }});
+});
+
+  /* data */
+  var data = [
+    {
+      "author": "Al Jazeera",
+      "title": "Cambodian opposition MPs flee from crackdown",
+      "description": "About half the country's opposition members of parliament have left as government vows more arrests over alleged coup.",
+      "url": "http://www.aljazeera.com/news/2017/09/cambodian-opposition-mps-flee-crackdown-170930063024925.html",
+      "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/3c2280a13b6f438da4eb5183147ec88e_18.jpg",
+      "publishedAt": "2017-09-30T07:56:11Z",
+      "id": "59f59454a453e91400f5bb4f",
+      "source": "al-jazeera-english",
+      "keywords": [
+        "cambodian",
+        "mps",
+        "test",
+        "test"
+      ]
+    },
+    {
+      "author": "Al Jazeera",
+      "title": "Puerto Rican mayor begs for aid after Hurricane Maria",
+      "description": "Angry mayor of San Juan accuses Trump administration of 'killing us with the inefficiency' as desperation grows.",
+      "url": "http://www.aljazeera.com/news/2017/09/puerto-rican-mayor-begs-aid-hurricane-maria-170930064704078.html",
+      "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/30/8999ba37017c4a988f5a3ffe556e933c_18.jpg",
+      "publishedAt": "2017-09-30T07:04:30Z",
+      "id": "59f59454a453e91400f5bb50",
+      "source": "al-jazeera-english",
+      "keywords": [
+        "puerto rican",
+        "hurricane maria"
+      ]
+    },
+    {
+      "author": "Al Jazeera",
+      "title": "Trump's tax cuts: For the rich or for the poor?",
+      "description": "We speak to economist Arthur Laffer about President Trump's plans for tax cuts, and we debate democracy in Rwanda.",
+      "url": "http://www.aljazeera.com/programmes/upfront/2017/09/tax-cuts-drive-economic-growth-inequality-170929142819252.html",
+      "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/29/7d20a3b3a156434daac317c1bae746a6_18.jpg",
+      "publishedAt": "2017-09-30T06:50:02Z",
+      "id": "59f59454a453e91400f5bb51",
+      "source": "al-jazeera-english",
+      "keywords": [
+        "trump",
+        "for"
+      ]
+    },
+     {
+      "author": "Blah",
+      "title": "Trump's tax cuts: For the rich or for the poor?",
+      "description": "We speak to economist Arthur Laffer about President Trump's plans for tax cuts, and we debate democracy in Rwanda.",
+      "url": "http://www.aljazeera.com/programmes/upfront/2017/09/tax-cuts-drive-economic-growth-inequality-170929142819252.html",
+      "urlToImage": "http://www.aljazeera.com/mritems/Images/2017/9/29/7d20a3b3a156434daac317c1bae746a6_18.jpg",
+      "publishedAt": "2017-09-30T06:50:02Z",
+      "id": "59f59454a453e91400f5bb51",
+      "source": "blah",
+      "keywords": [
+        "donald",
+        "shooting"
+      ]
+    }
+  ];
+
+  /* process data into useable format: stores keyword in a map with an array of source data */
+  var keywords = {};
+
+  for (var i in data) {
+      for (var j in data[i].keywords) {
+
+      var keyword = data[i].keywords[j];
+      var dataToPush = { "source": data[i].source, "publishedAt": data[i].publishedAt, "title":data[i].title, "url":data[i].url };
+
+      if (keywords[keyword] == undefined) {
+        keywords[keyword] = [dataToPush];
+      }
+      else {
+        keywords[keyword].push(dataToPush);
+      }
+    }
+  }
+
+  var d3Valid = {"children":[]};
+  for (var k in keywords) {
+        var toAdd = {}
+        toAdd["keyword"] = k;
+        toAdd["source"] = keywords[k][0]["source"];
+        toAdd["data"] = [];
+        for (var article in keywords[k]){
+            toAdd["data"].push(keywords[k][article]);
+        }
+    d3Valid["children"].push(toAdd);
+  }
+
+
+     /* rendering */
+  var svg = d3.select("svg"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+  var format = d3.format(",d");
+
+  var color = d3.scaleOrdinal(d3.schemeCategory20c);
+
+  var pack = d3.pack()
+      .size([width, height])
+      .padding(1.5);
+
+  var root = d3.hierarchy(d3Valid)
+    .sum(function(d) { if (d.data != undefined) {return d.data.length; } else { return 0;} })
+    .each(function(d) {
+        //console.log(d.data);
+        //console.log(d.value);
+        //console.log(d.children);
+         
+          d.id = d.data.keyword;
+          d.package = d.data.source;
+          d.class = d.data.keyword;
+    });
+
+  var node = svg.selectAll(".node")
+  .data(pack(root).leaves())
+  .enter().append("g")
+    .attr("class", "node")
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  node.append("circle")
+    .attr("id", function(d) { return d.id; })
+    .attr("r", function(d) { return d.r; })
+    .style("fill", function(d) { return color(d.package); });
+
+  node.append("clipPath")
+    .attr("id", function(d) { return "clip-" + d.id; })
+  .append("use")
+    .attr("xlink:href", function(d) { return "#" + d.id; });
+
+  node.append("text")
+    .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+  .selectAll("tspan")
+  .data(function(d) { return d.class.split(/(?=[A-Z][^A-Z])/g); })
+  .enter().append("tspan")
+    .attr("x", 0)
+    .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
+    .text(function(d) { return d; });
+
+  node.append("title")
+    .text(function(d) { return d.id + "\n" + format(d.value); });
+
+    </script>
+
+    <div id="footer">
+        Usage credit to <a href="https://newsapi.org/">News API</a> ©
+    </div>
 
 </div>
 </body>

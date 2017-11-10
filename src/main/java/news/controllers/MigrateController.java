@@ -1,6 +1,7 @@
 package news.controllers;
 
 import news.models.Feed;
+import news.models.sources.Source;
 import news.storage.StorageService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -36,10 +37,10 @@ public class MigrateController {
 
         if (!isNowWithinRunTime()) return ResponseEntity.accepted().body("Unable to persist records at this time");
 
-        for (String source : storageService.getSources()) {
-            ResponseEntity<Feed> response = getExternalSourceRecords(source);
+        for (news.storage.entities.Source source : storageService.getSources()) {
+            ResponseEntity<Feed> response = getExternalSourceRecords(source.getId());
             if (response.getStatusCode() != HttpStatus.OK) {
-                log.warn("Unable to process source results from " + source);
+                log.warn("Unable to process source results from " + source.getId());
             } else {
                 storageService.store(response.getBody());
             }
@@ -66,7 +67,7 @@ public class MigrateController {
         Feed feed;
 
         try {
-            feed = restTemplate.getForObject(storageService.getValidNewsSourceApi() +
+            feed = restTemplate.getForObject(storageService.getValidNewsArticlesApi() +
                     "&source=" + source, Feed.class);
             log.info("Response is " + feed);
         } catch (Exception e) {
