@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <title></title>
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <style>
 html {
   height: 100%;
@@ -40,7 +41,18 @@ body {
   text-align: center;
 }
 
-
+#left-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 2rem;
+  padding-bottom: 50px;
+  height: 100%;
+  background-color: #efefef;
+  text-align: left;
+  z-index: 1;
+  overflow: scroll;
+}
     </style>
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -109,8 +121,49 @@ body {
 
 </script>
 
+
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.controller("controller", function($scope, $http) {
+        $http.get("/api/search/repo/sources").then(function(response) {
+            $scope.sources = response.data;
+        });
+
+    });
+    app.directive("cbox", function() {
+    return {
+        template : "<label for='checkbox-{{ $index }}' class='ui-checkboxradio-label ui-corner-all ui-button ui-widget'>{{ source.name }}</label> \
+        <input type='checkbox' name='checkbox-{{ $index }}' id='checkbox-{{ $index }}' class='ui-checkboxradio ui-helper-hidden-accessible'>\
+        <br />"
+    };
+});
+</script>
+<script type="text/javascript"> 
+
+  $( function() {
+    $( "input" ).checkboxradio({
+      icon: false
+    });
+  } );
+
+</script>
+
+<div ng-app="app" ng-controller="controller">
+
+<div id="left-panel">
+<fieldset>
+    <legend>News Sources:</legend><br />
+    <cbox ng-repeat="source in sources | orderBy: 'name'"></cbox>
+    <!--
+    <label ng-repeat="source in sources | orderBy: 'name'" for="checkbox-{{ $index }}"> {{ source.name }} </label>
+    <input ng-repeat="source in sources | orderBy: 'name'" type="checkbox" name="checkbox-{{ $index }}" id="checkbox-{{ $index }}"><br />
+    -->
+  </fieldset>
+</div>
+
 <div class="app">
     <h1> News Reader </h1>
+
     <br/>
 
     <input type="text" id="from_datepicker" class="datepicker">
@@ -118,7 +171,6 @@ body {
 
     <svg width="900" height="900" font-family="sans-serif" font-size="13" text-anchor="middle"></svg>
     <script type="text/javascript">
-
 
 $("body").click(function(){
     $.get({url: "http://localhost:8080/api/search/repo/sources", success: function(result){
@@ -273,7 +325,7 @@ $("body").click(function(){
     .text(function(d) { return d.id + "\n" + format(d.value); });
 
     </script>
-
+</div>
     <div id="footer">
         Usage credit to <a href="https://newsapi.org/">News API</a> ©
     </div>
