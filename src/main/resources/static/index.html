@@ -83,50 +83,45 @@ body {
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-	/** Set up date picker **/
-	var options = {
-
-		showButtonPanel: true,
-		dateFormat: "yy-mm-dd",
-		altFormat: "yy-mm-dd",
-		showOn: "button",
-		buttonImage: "https://png.icons8.com/?id=5593&size=40",
-		buttonImageOnly: true,
-		buttonText: "Select date",
-		showAnim: "drop",
-        autoSize: true
-
-	};
-
-	$( function() {
-		$( ".datepicker" ).datepicker(options);
-	} );
-
-	/** Default initializations **/
-	$( function() {
-		$( "#from_datepicker" ).datepicker( "setDate", "-31d" );
-		$( "#to_datepicker" ).datepicker( "setDate", "-0d" );
-	})
-
-        /** Set up checkbox functionality **/
-      $( function() {
-        $( "input" ).width("120").checkboxradio({
-          icon: false
-        });
-      } );
-    </script>
-    <script>
-
-    </script>
-
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
-
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
+ <script>
+    /** Set up date picker **/
+    var options = {
+
+        showButtonPanel: true,
+        dateFormat: "yy-mm-dd",
+        altFormat: "yy-mm-dd",
+        showOn: "button",
+        buttonImage: "https://png.icons8.com/?id=5593&size=40",
+        buttonImageOnly: true,
+        buttonText: "Select date",
+        showAnim: "drop",
+        autoSize: true
+
+    };
+
+    $( function() {
+        $( ".datepicker" ).datepicker(options);
+    } );
+
+    /** Default initializations **/
+    $( function() {
+        $( "#from_datepicker" ).datepicker( "setDate", "-31d" );
+        $( "#to_datepicker" ).datepicker( "setDate", "-0d" );
+    });
+
+        /** Set up checkbox functionality **/
+      $( function() {
+        $( "input" ).width("140").checkboxradio({
+          icon: false
+        });
+      } );
+    </script>
 </head>
 <body>
 
@@ -156,19 +151,31 @@ body {
         $http.get("/api/search/repo/sources").then(function(response) {
             $scope.sources = response.data;
         });
-        $scope.selectedSource = "ars-technica";
         $scope.data = "";
+        $scope.radio = {
+            "option": "ars-technica"
+        };
 
-        $scope.grabArticlesForSource = function() {
+        var request = function() {
+            console.log($scope.radio);
+
             $scope.fromDate = $( "#from_datepicker" ).datepicker("getDate").toISOString().split('.')[0]+"Z";
             $scope.toDate = $( "#to_datepicker" ).datepicker("getDate").toISOString().split('.')[0]+"Z";
 
-            $http.get("/api/search/repo/" + $scope.selectedSource + "/" 
+            $http.get("/api/search/repo/" + $scope.radio.option + "/" 
                 + $scope.fromDate + "/" 
                 + $scope.toDate).then(function(response) {
                 $scope.data = response.data;
                 return $scope.renderD3View($scope.data);
             });
+        };
+
+        $scope.$on('$viewContentLoaded', function() {
+            request();
+        });
+
+        $scope.grabArticlesForSource = function() {
+            request();
         }
 
         $scope.renderD3View = function(data) {
@@ -256,15 +263,14 @@ body {
     });
     app.directive("cbox", function() {
     return {
-        template : "<label for='checkbox-{{ $index }}' class='ui-checkboxradio-label ui-corner-all ui-button ui-widget'>{{ source.name }}</label> \
-        <input type='checkbox' name='checkbox-{{ $index }}' id='checkbox-{{ $index }}' class='ui-checkboxradio ui-helper-hidden-accessible'>\
+        scope: {
+            radio: "="
+        },
+        template : "<label for='radio-{{ $parent.$index }}' class='ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label'>{{ $parent.source.name }} </label> \
+        <input type='radio' name='radio-1' id='radio-{{ $parent.index }}' ng-model='radio.option' ng-value='{{ $parent.source.id }}' class='ui-checkboxradio ui-helper-hidden-accessible'>\
         <br />"
     };
 });
-</script>
-<script type="text/javascript"> 
-
-
 </script>
 
 <div ng-app="app" ng-controller="controller">
