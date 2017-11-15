@@ -78,6 +78,7 @@ body {
 
     </style>
 <link href="https://fonts.googleapis.com/css?family=Vollkorn+SC" rel="stylesheet">
+
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
 
@@ -261,24 +262,18 @@ body {
         }
 
     });
-    app.directive("cbox", function() {
-    return {
-        scope: {
-            radio: "="
-        },
-        template : "<label for='radio-{{ $parent.$index }}' class='ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label'>{{ $parent.source.name }} </label> \
-        <input type='radio' name='radio-1' id='radio-{{ $parent.index }}' ng-model='radio.option' ng-value='{{ $parent.source.id }}' class='ui-checkboxradio ui-helper-hidden-accessible'>\
-        <br />"
-    };
-});
 </script>
+
 
 <div ng-app="app" ng-controller="controller">
 
 <div id="left-panel">
 <fieldset>
     <legend class="title">Sources:</legend><br />
-    <cbox ng-repeat="source in sources | orderBy: 'name'"></cbox>
+    <div  ng-repeat="source in sources | orderBy: 'name'" >
+     <label for='radio-{{ $index }}' >{{ source.name }}</label>
+     <input type='radio' name='radio-1' id='radio-{{ $index }}' ng-model='radio.option' value='{{ source.id }}'> <br />
+     </div>
   </fieldset>
 </div>
 
@@ -288,11 +283,7 @@ body {
     <input type="text" id="from_datepicker" class="datepicker">
     <input type="text" id="to_datepicker" class="datepicker">
     <span> <a><img src="https://png.icons8.com/?id=9978&size=50" style="cursor:pointer" ng-click="grabArticlesForSource()"/></a> </span>
-    <!--
-    <div id="submit-button" ng-click="grabArticlesForSource()" >
-    <img src="https://png.icons8.com/?id=39811&size=50" />
-    -->
-    </div>
+ 
 </div>
 
 <div class="app">
