@@ -1,570 +1,81 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title></title>
+<title>News History</title>
 <head>
-
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <style>
-html {
-  height: 100%;
-  box-sizing: border-box;
-}
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-body {
-  position: relative;
-  margin: 0;
-  padding-bottom: 6rem;
-  min-height: 100%;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-}
-
-.app {
-  margin: 0 auto;
-  padding-top: 12%;
-  max-width: 640px;
-  width: 94%;
-}
-
-#footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 1rem;
-  font-size: 12px;
-  background-color: #efefef;
-  text-align: center;
-}
-
-#left-panel {
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding: 1.3rem;
-  padding-bottom: 50px;
-  height: 100%;
-  background-color: #efefef;
-  text-align: left;
-  z-index: 1;
-  overflow: scroll;
-}
-
-#right-panel {
-  float:right;
-  position: fixed;
-  right: 0;
-  top: 0;
-  padding: 1rem;
-  padding-top: 2em;
-  padding-bottom: 1.5em;
-  background-color: #efefef;
-  text-align: left;
-  z-index: 1;
-  -webkit-border-bottom-left-radius: 4em;
-  -moz-border-bottom-left-radius: 4em;
-  max-height: 75%;
-  overflow: scroll;
-  }
-
-#top-panel {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 10;
-  padding: 2rem;
-  height: 10%;
-  width:100%;
-  text-align: center;
-  z-index: 0;
-}
-
-.title {
- font-family: 'Vollkorn SC', 'serif';
-}
-
-text {
-    cursor: pointer
-}
-
-.hidden {
-  visibility: hidden;
-}
-
-.info-box-wrapper {
-
-}
-
-.info-box-wrapper .info-box-arrow {
-    left: 0;
-    top: 50%;
-    margin-top: -5px;
-    border-right-style: solid;
-    border-left: none;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-  }
-
-.info-box {
-  font-size: 10px;
-  position: absolute;
-  padding: 5px;
-  z-index: 100000;
-}
-
-.info-box-arrow-wrapper {
-  border-right-color: #bfbfbf;
-}
-
-.info-box-arrow {
-  position: absolute;
-  width: 0;
-  height: 0;
-  line-height: 0;
-  border: 5px dashed #bfbfbf;
-}
-
-.info-box-innerdata {
-  -webkit-border-radius:10px;
-  -moz-border-radius:20px;
-  background-color: #bfbfbf;
-  color: #000;
-  font-family: Veranda, Arial;
-  max-width: 600px;
-  padding: 10px 5px 10px 5px;
-  text-align: center;
-}
-
-span.info-box-inner-data-text a {
- color: darkblue;
- font-size: 140%;
- font-weight: bold;
-}
-
-#submit-button {
-  padding: 1rem;
-}
-
-#expand-draw:hover {
-  -moz-transform: scale(1.2);
-  -webkit-transform: scale(1.2);
-  transform: scale(1.2);
-}
-
-#bookshelf li {
-  font-size: 12px;
-}
-
-a:visited {
-  color: #264ca9;
-}
-
-    </style>
+<link href="app.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Vollkorn+SC" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
-          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
- <script>
-    /** Set up date picker **/
-    var options = {
-
-        showButtonPanel: true,
-        dateFormat: "yy-mm-dd",
-        altFormat: "yy-mm-dd",
-        showOn: "button",
-        buttonImage: "https://png.icons8.com/?id=5593&size=40",
-        buttonImageOnly: true,
-        buttonText: "Select date",
-        showAnim: "drop",
-        autoSize: true
-
-    };
-
-    $( function() {
-        $( ".datepicker" ).width(120).datepicker(options);
-    } );
-
-    /** Default initializations **/
-    $( function() {
-        $( "#from_datepicker" ).datepicker( "setDate", "-31d" );
-        $( "#to_datepicker" ).datepicker( "setDate", "-0d" );
-    });
-
-        /** Set up checkbox functionality **/
-      $( function() {
-        $( "input[type='radio']" ).checkboxradio({
-          icon: false
-        });
-      } );
-    </script>
+<script src="min/bootstrap.js"></script>
+<script src="min/angularD3.js"></script>
 </head>
 <body>
-
-<script> 
+<script type="text/javascript">
   d3.select("body").style("background-color", "#d6f5f5");
-
-  /* breathing colors */
   var colors = ["#f4ffff", "#d6f5f5"];
-
+  
   var recolor = function() {
     var c = colors.shift();
     colors.push(c);
 
     d3.select("body")
-    .transition()
-    .duration(20000)
-    .style("background-color", c)
-    .each("end", recolor);
+      .transition()
+      .duration(25000)
+      .style("background-color", c)
+      .each("end", recolor);
   };
 
   recolor();
 </script>
-
-<script type="text/javascript">
-    var app = angular.module("app", []);
-    app.controller("controller", function($window, $scope, $http) {
-        $http.get("/api/search/repo/sources").then(function(response) {
-            $scope.sources = response.data;
-        });
-        $scope.data = [{"author":"Josh Wingrove, Andrew Mayeda, Eric Martin","title":"Mexico and Canada Reject U.S. Nafta Demands","description":"The ministers leading Nafta negotiations are set to wrap up the latest round of high-level talks after Canada and Mexico rejected what they see as hardline proposals by the U.S.","url":"https://www.bloomberg.com/news/articles/2017-10-17/mexico-and-canada-reject-u-s-nafta-demands-as-talks-wrap-up","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iVQAgX.7tmXA/v0/1200x695.jpg","publishedAt":"2017-10-17T15:21:31.007Z","id":"59ed51edcb1fe820c20863d8","source":"bloomberg","keywords":["Mexico ","Canada Reject ","Nafta Demands"]},{"author":"Sarah Ponczek","title":"Dow Passes 23,000 for the First Time, Fueled by Strong Earnings","description":"The Dow Jones Industrial Average passed another milestone, topping 23,000 for the first time, as strong earnings from UnitedHealth Group Inc. and Johnson & Johnson helped push the more than century-old gauge to a record.","url":"https://www.bloomberg.com/news/articles/2017-10-17/another-thousand-points-for-the-dow-as-earnings-fuel-23-000-run","urlToImage":"https://assets.bwbx.io/s3/javelin/public/javelin/images/social-default-a4f15fa7ee.jpg","publishedAt":"2017-10-17T15:12:15.186Z","id":"59ed51edcb1fe820c20863d9","source":"bloomberg","keywords":["Dow Passes ","First Time","Fueled ","Strong Earnings"]},{"author":"Justin Sink, Jennifer Jacobs","title":"Despite Trump’s Plea, Bannon Isn’t Going to Stop His Campaign Against GOP Incumbents","description":"","url":"https://www.bloomberg.com/news/articles/2017-10-17/trump-bid-for-truce-with-bannon-signals-desperation-on-tax-plan","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iXuXKOdeK0gY/v1/1200x800.jpg","publishedAt":"2017-10-17T01:43:38.486Z","id":"59ed51edcb1fe820c20863da","source":"bloomberg","keywords":["Despite Trump","Plea","Bannon Isn","Going ","Stop His Campaign Against GOP Incumbents"]},{"author":"Max Abelson","title":"Scaramucci's Media Venture Apologizes for Holocaust Death Poll","description":"Former White House Communications Director Anthony Scaramucci’s new media business, ScaramucciPost, apologized Tuesday after it published a poll on Twitter asking \"How many Jews were killed in the Holocaust?\"","url":"https://www.bloomberg.com/news/articles/2017-10-17/scaramucci-s-media-venture-apologizes-for-holocaust-death-poll","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iuc18F8u6loA/v0/1200x800.jpg","publishedAt":"2017-10-17T13:46:41.117Z","id":"59ed51edcb1fe820c20863db","source":"bloomberg","keywords":["Scaramucci","Media Venture Apologizes ","Holocaust Death Poll"]},{"author":"Toluse Olorunnipa","title":"Marino Has Dropped Out of the Running for Drug Czar, Trump Says","description":"President Donald Trump said Tuesday his nominee to be the nation’s drug czar, Tom Marino, withdrew from consideration following reports that he pushed legislation making it harder for the government to combat the opioid crisis.","url":"https://www.bloomberg.com/news/articles/2017-10-17/trump-says-drug-czar-nominee-withdrawing-after-opioids-report","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iCYHEMgGEtuM/v0/1200x800.jpg","publishedAt":"2017-10-17T12:58:35.38Z","id":"59ed51edcb1fe820c20863dc","source":"bloomberg","keywords":["Marino Has Dropped Out ","Running ","Drug Czar","Trump Says"]},{"author":"Matt Levine","title":"What Is an ICO Anyway? A Few Theories","description":"A sensible memo about the legal status of initial coin offerings.","url":"https://www.bloomberg.com/view/articles/2017-10-17/what-is-an-ico-anyway-a-few-theories","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3BS8VNpqXok/v0/1200x784.jpg","publishedAt":"2017-10-17T15:35:31.703Z","id":"59ed51edcb1fe820c20863dd","source":"bloomberg","keywords":["What Is ","ICO Anyway","Few Theories"]},{"author":"Olga Kharif","title":"Return on Investment for Digital Tokens Hasn’t Been That Good","description":"Initial coin offerings have become the stuff of legend among speculators seeking quick windfalls, yet most people are more likely to lose money investing in digital tokens following the sales.","url":"https://www.bloomberg.com/news/articles/2017-10-17/digital-token-returns-prove-fleeting-after-euphoria-wears-off","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iYsXpCsE9diA/v0/1200x800.jpg","publishedAt":"2017-10-17T14:50:05.446Z","id":"59ed51edcb1fe820c20863de","source":"bloomberg","keywords":["Return ","Investment ","Digital Tokens Hasn","Been That Good"]},{"author":"Kyle Stock, Lance Lambert, David Ingold","title":"Smartphones Are Killing Americans, But Nobody’s Counting","description":"Amid a historic spike in U.S. traffic fatalities, federal data on the danger of distracted driving are getting worse.","url":"https://www.bloomberg.com/news/articles/2017-10-17/smartphones-are-killing-americans-but-nobody-s-counting","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3BiQNzNOw8k/v0/1200x801.jpg","publishedAt":"2017-10-17T08:00:09.862Z","id":"59ed51edcb1fe820c20863df","source":"bloomberg","keywords":["Smartphones Are Killing Americans","But Nobody","Counting"]},{"author":"Garfield Clinton Reynolds","title":"Whatever the Rule, Investors See Taylor Turning Fed Hawkish","description":"Investors are still betting a Federal Reserve run by economist John Taylor would mean higher U.S. interest rates despite his signaling he would be more flexible in setting monetary policy than his academic work suggests.","url":"https://www.bloomberg.com/news/articles/2017-10-17/whatever-the-rule-investors-see-taylor-turning-fed-hawkish","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iWEkGC5jeoNw/v0/1200x800.jpg","publishedAt":"2017-10-17T14:32:55.49Z","id":"59ed51edcb1fe820c20863e0","source":"bloomberg","keywords":["Whatever ","Rule","Investors See Taylor Turning Fed Hawkish"]},{"author":"Tatiana Darie","title":"This Pharma Stock Is Up 111% and Investors Are Wondering What's Next","description":"Vertex Pharmaceuticals Inc., on the brink of a breakthrough that could treat nearly all patients with cystic fibrosis, has done everything an investor could ask for in 2017, including double its market cap to almost $40 billion.","url":"https://www.bloomberg.com/news/articles/2017-10-17/question-for-vertex-bulls-is-how-to-build-on-a-20-billion-rally","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iEWrAjqMaRLk/v0/1200x827.jpg","publishedAt":"2017-10-17T14:54:09.172Z","id":"59ed51edcb1fe820c20863e1","source":"bloomberg","keywords":["This Pharma Stock Is Up ","Investors Are Wondering What","Next"]},{"author":null,"title":"These Are the Wall Street Jobs Being Replaced By Robots","description":"Prepare to adapt.","url":"https://www.bloomberg.com/graphics/2017-wall-street-robots/","urlToImage":"https://www.bloomberg.com/graphics/2017-wall-street-robots/img/2017-wall-street-robots_facebook.png","publishedAt":"2017-10-18T09:00:00Z","id":"59ed522ecb1fe820c20865ee","source":"bloomberg","keywords":["These Are ","Wall Street Jobs Being Replaced By Robots"]},{"author":"Laura Litvan, Anna Edney, Erik Wasson","title":"Deal to Shore Up Obamacare Faces Big Hurdles, Including Trump Himself","description":"Senators may have struck a bipartisan deal to prop up Obamacare’s insurance exchanges, but it faces a tortuous path to becoming law.","url":"https://www.bloomberg.com/news/articles/2017-10-18/deal-to-shore-up-obamacare-faces-big-hurdles-including-trump","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iQ3HWFsvYE.I/v0/1200x675.jpg","publishedAt":"2017-10-18T08:00:00.001Z","id":"59ed522ecb1fe820c20865ef","source":"bloomberg","keywords":["Deal ","Shore Up Obamacare Faces Big Hurdles","Including Trump Himself"]},{"author":"Benjamin Elgin, Vernon Silver","title":"Facebook and Google Helped Anti-Refugee Campaign in Swing States","description":"The big tech companies worked closely with Secure America Now to target an audience the group felt could be swayed by the message.","url":"https://www.bloomberg.com/news/articles/2017-10-18/facebook-and-google-helped-anti-refugee-campaign-in-swing-states","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iat9A.zEhULI/v0/1200x757.jpg","publishedAt":"2017-10-18T08:00:26.045Z","id":"59ed522ecb1fe820c20865f0","source":"bloomberg","keywords":["Facebook ","Google Helped Anti-Refugee Campaign ","Swing States"]},{"author":"Ari Natter, Jennifer A Dlouhy","title":"Republicans May Use Budget to Open Arctic, Atlantic to Oil Rigs","description":"Congressional Republicans have found a way to use the federal budget to open the Arctic National Wildlife Refuge to oil drilling -- and they don’t plan on stopping there.","url":"https://www.bloomberg.com/news/articles/2017-10-18/republicans-may-use-budget-to-open-arctic-atlantic-to-oil-rigs","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i.yZnddyIp80/v0/1200x800.jpg","publishedAt":"2017-10-18T08:00:00Z","id":"59ed522ecb1fe820c20865f1","source":"bloomberg","keywords":["Republicans May Use Budget ","Open Arctic","Atlantic ","Oil Rigs"]},{"author":"Ting Shi","title":"Xi Plans to Turn China Into a Leading Global Power by 2050","description":"President Xi Jinping warned of “severe” challenges while laying out a road map to turn China into a leading global power by 2050, as he kicked off a twice-a-decade party gathering expected to cement his influence into the next decade.","url":"https://www.bloomberg.com/news/articles/2017-10-17/xi-to-put-his-stamp-on-chinese-history-at-congress-party-opening","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iaML3ITo1HFk/v0/1200x675.jpg","publishedAt":"2017-10-17T16:53:30.918Z","id":"59ed522ecb1fe820c20865f2","source":"bloomberg","keywords":["Xi Plans ","Turn China Into ","Leading Global Power "]},{"author":"Jeff Green, Jordyn Holman","title":"Faber, Weinstein Put Boards on Notice: You’re the Adults Now","description":"Corporate directors should now be on notice: bad behavior isn’t so easily swept under the rug.","url":"https://www.bloomberg.com/news/articles/2017-10-18/faber-weinstein-put-boards-on-notice-you-re-the-adults-now","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iZe1wcsrefHc/v0/1200x800.jpg","publishedAt":"2017-10-18T04:42:30.978Z","id":"59ed522ecb1fe820c20865f4","source":"bloomberg","keywords":["Faber","Weinstein Put Boards ","Notice","You","Adults Now"]},{"author":"Peggy Collins, Katherine Burton","title":"George Soros Pours Billions Into Charity Ahead of Tax Deadline","description":"George Soros is giving his foundation a big inflow of money in part to minimize a tax bill hedge fund managers are facing this year.","url":"https://www.bloomberg.com/news/articles/2017-10-17/george-soros-pours-billions-into-charity-as-tax-deadline-looms","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iFc2qYXCtj1g/v0/1200x800.jpg","publishedAt":"2017-10-17T20:17:43.341Z","id":"59ed522ecb1fe820c20865f5","source":"bloomberg","keywords":["George Soros Pours Billions Into Charity Ahead ","Tax Deadline"]},{"author":"Srinivasan Sivabalan","title":"The End of Cash?","description":"Do we need cash? Humans have used all sorts of things to exchange items of economic value — rare metals, strings of shells and even jugs of whiskey. Those objects have gotten more ephemeral, with paper money replacing most coins, and digital forms increasingly supplanting paper. Could physical cash go away entirely? Economists see great payoffs in a cashless society: lower transaction costs, new tools to manage economic growth and an end to tax evasion and money laundering. Critics see an erosio","url":"https://www.bloomberg.com/view/quicktake/the-end-of-cash","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/igu2ZmVCvpRk/v0/1200x-1.jpg","publishedAt":"2017-10-18T04:09:20.564Z","id":"59ed522ecb1fe820c20865f6","source":"bloomberg","keywords":["The End ","Cash"]},{"author":"Justin Sink","title":"Trump Pitches Tax Plan to Policy Group That Helped Write It","description":"President Donald Trump sought to rally support for his effort to overhaul the nation’s tax code on Tuesday at a conservative policy group that helped write the plan.","url":"https://www.bloomberg.com/news/articles/2017-10-17/trump-rallies-for-tax-plan-at-policy-group-that-helped-write-it","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iC_4dF7UGg_U/v0/1200x838.jpg","publishedAt":"2017-10-17T23:23:51.366Z","id":"59ed522ecb1fe820c20865f7","source":"bloomberg","keywords":["Trump Pitches Tax Plan ","Policy Group That Helped Write It"]},{"author":"Erik Wasson, Sahil Kapur, Laura Litvan","title":"U.S. Senate Adopts Budget, Giving Momentum to Trump's Tax-Cut Plans","description":"The Senate adopted a fiscal 2018 budget resolution Thursday that House GOP leaders agreed to accept, a show of unity aimed at speeding consideration of President Donald Trump’s plan to enact tax cuts.","url":"https://www.bloomberg.com/news/articles/2017-10-20/senate-adopts-budget-giving-momentum-to-trump-s-tax-cut-plans","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i2gGrmjxvWCs/v0/1200x800.jpg","publishedAt":"2017-10-20T01:34:07.983Z","id":"59ed526ecb1fe820c20867f4","source":"bloomberg","keywords":["Senate Adopts Budget","Giving Momentum ","Trump","Tax-Cut Plans"]},{"author":"Margaret Newkirk","title":"Arkansas City Sends Amazon a Dear John Letter Instead of a Pitch","description":"‘It’s not you, it’s us.” So began a full-page ad in today’s Washington Post, signed with love from Little Rock, Arkansas. It was an open letter informing Amazon that the city would not be bidding for its new mega headquarters -- and by the way was a great place for smaller companies to hang their hats.","url":"https://www.bloomberg.com/news/articles/2017-10-19/arkansas-city-sends-amazon-a-dear-john-letter-instead-of-a-pitch","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/imCG.mBY1MEQ/v0/1200x781.jpg","publishedAt":"2017-10-19T21:39:19.231Z","id":"59ed526ecb1fe820c20867f5","source":"bloomberg","keywords":["Arkansas City Sends Amazon ","Dear John Letter Instead ","Pitch"]},{"author":"Nick Wadhams","title":"Tillerson Vows to Stay On Until He’s ‘No Longer Needed’ by Trump","description":"U.S. Secretary of State Rex Tillerson vowed to remain in his post despite some public differences with President Donald Trump and said he ignores criticism and speculation in the media about his status or his future in the administration.","url":"https://www.bloomberg.com/news/articles/2017-10-19/tillerson-vows-to-stay-on-until-he-s-no-longer-needed-by-trump","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ixIdRI0oD_vI/v0/1200x800.jpg","publishedAt":"2017-10-19T19:23:52.241Z","id":"59ed526ecb1fe820c20867f6","source":"bloomberg","keywords":["Tillerson Vows ","Stay On Until He","No Longer Needed","Trump"]},{"author":"Jennifer Jacobs, Saleha Mohsin","title":"Trump Advisers Are Said to Lean Toward Taylor or Powell for Fed","description":"President Donald Trump’s closest advisers are steering him toward choosing either Stanford economist John Taylor or Federal Reserve Board Governor Jerome Powell to be the next Fed chief, according to several people familiar with the process.","url":"https://www.bloomberg.com/news/articles/2017-10-19/trump-advisers-are-said-to-lean-toward-taylor-or-powell-for-fed-j8z4b26k","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ifzEIFOM3ILE/v0/1200x679.jpg","publishedAt":"2017-10-19T23:48:45.027Z","id":"59ed526ecb1fe820c20867f7","source":"bloomberg","keywords":["Trump Advisers Are Said ","Lean Toward Taylor ","Powell ","Fed"]},{"author":"Michael Sasso","title":"United Tumbles After CEO Leaves Wall Street Skeptical of Turnaround","description":"United Continental Holdings Inc. left Wall Street guessing on how it would get its turnaround back on track next year, drawing scorn from analysts and sending shares to their biggest drop in eight years.","url":"https://www.bloomberg.com/news/articles/2017-10-18/united-air-sees-further-fare-weakness-adding-to-pressure-on-ceo","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/idfS5SRUJydA/v0/1200x649.jpg","publishedAt":"2017-10-18T20:33:20.819Z","id":"59ed526ecb1fe820c20867f8","source":"bloomberg","keywords":["United Tumbles After CEO Leaves Wall Street Skeptical ","Turnaround"]},{"author":"Phil Serafino","title":"Forget Hurricanes, Brexit and Kim's Missiles: Earnings Are Fine","description":"Companies around the world faced hurricanes, the U.K.’s messy divorce from the European Union and ominous missile tests by North Korea in the third quarter. As investors await earnings reports over the coming weeks, the challenge will be to ignore all that.","url":"https://www.bloomberg.com/news/articles/2017-10-19/forget-hurricanes-brexit-and-kim-s-missiles-earnings-are-fine","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iySGXy_xGjeA/v0/1200x800.jpg","publishedAt":"2017-10-19T23:00:00.004Z","id":"59ed526ecb1fe820c20867f9","source":"bloomberg","keywords":["Forget Hurricanes","Brexit ","Kim","Missiles","Earnings Are Fine"]},{"author":"Siraj Datoo, Lisa Fleisher","title":"Automation on Wall Street Is Coming Sooner Than You Think","description":"Five big ideas that made the week interesting, and the stories behind them.","url":"https://www.bloomberg.com/news/articles/2017-10-20/wall-street-jobs-at-risk-of-automation-in-future","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/imb22jr1UK5w/v0/1200x800.jpg","publishedAt":"2017-10-20T00:09:08.98Z","id":"59ed526ecb1fe820c20867fa","source":"bloomberg","keywords":["Automation ","Wall Street Is Coming Sooner Than You Think"]},{"author":"Pooja Thakur Mahrotri, Adam Majendie","title":"A Guide to Luxury Real Estate in Singapore","description":"What you need to know when house-hunting in the high-tech center of international finance.","url":"https://www.bloomberg.com/news/articles/2017-10-19/a-guide-to-luxury-real-estate-in-singapore","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/icO6XWJgeetE/v1/1200x800.jpg","publishedAt":"2017-10-19T22:22:32.657Z","id":"59ed526ecb1fe820c20867fb","source":"bloomberg","keywords":["Guide ","Luxury Real Estate ","Singapore"]},{"author":"Naureen S Malik","title":"Puerto Rico's Back-Up Power Supply Is Maxed Out","description":"Back-up diesel generators in Puerto Rico that have provided a lifeline for hospitals and other critical facilities in the aftermath of Hurricane Maria are starting to break down and need fixing.","url":"https://www.bloomberg.com/news/articles/2017-10-19/back-up-power-maxing-out-threatens-puerto-rico-with-more-outages","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iASSotMZus7k/v0/1200x798.jpg","publishedAt":"2017-10-19T20:57:55.903Z","id":"59ed526ecb1fe820c20867fc","source":"bloomberg","keywords":["Puerto Rico","Back-Up Power Supply Is Maxed Out"]},{"author":"John Tozzi","title":"Pollution’s Annual Price Tag? $4.6 Trillion and 9 Million Dead","description":"And that was just in 2015, according to a new global report on the consequences of humanity’s actions.","url":"https://www.bloomberg.com/news/articles/2017-10-19/pollution-s-annual-pricetag-4-6-trillion-and-9-million-dead","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i4Eldv_iUuCo/v1/1200x798.jpg","publishedAt":"2017-10-19T22:30:08.716Z","id":"59ed526ecb1fe820c20867fd","source":"bloomberg","keywords":["Pollution","Annual Price Tag","Trillion ","Million Dead"]},{"author":"Christopher Condon","title":"Yellen Defends Legacy Amid Uncertainty Over Fed Leadership","description":"Federal Reserve Chair Janet Yellen defended the central bank’s use of unconventional and often unpopular monetary policy tools after the Great Recession, highlighting some of her achievements at the helm as President Donald Trump weighs her reappointment.","url":"https://www.bloomberg.com/news/articles/2017-10-20/yellen-defends-her-legacy-amid-uncertainty-over-fed-leadership","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/idJTGK2SwJzw/v0/1200x800.jpg","publishedAt":"2017-10-20T23:30:00Z","id":"59ed52afcb1fe820c2086a19","source":"bloomberg","keywords":["Yellen Defends Legacy Amid Uncertainty Over Fed Leadership"]},{"author":"Lu Wang","title":"A Record in Records for U.S. Stocks Rallying Sixth Straight Week","description":"Earnings-day blowups, leverage warnings in China, Apple’s worst rout since August. Oh, and a sixth straight week of gains for the S&P 500.","url":"https://www.bloomberg.com/news/articles/2017-10-20/a-record-in-records-for-u-s-stocks-rallying-sixth-straight-week","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ioTGgFLl9Rvw/v0/1200x800.jpg","publishedAt":"2017-10-20T20:50:28.987Z","id":"59ed52afcb1fe820c2086a1a","source":"bloomberg","keywords":["Record ","Records ","Stocks Rallying Sixth Straight Week"]},{"author":"Edvard Pettersson","title":"J&J Wins Reversal of $417 Million California Talc Verdict","description":"Johnson & Johnson got a $417 million jury verdict thrown out after a California judge agreed the company didn’t have a duty to warn a woman who has since died that its Baby Powder could cause ovarian cancer.","url":"https://www.bloomberg.com/news/articles/2017-10-20/j-j-wins-reversal-of-417-million-california-baby-powder-verdict","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i8qLrSjey9f8/v1/1200x675.jpg","publishedAt":"2017-10-20T23:25:56.324Z","id":"59ed52afcb1fe820c2086a1b","source":"bloomberg","keywords":["Wins Reversal ","Million California Talc Verdict"]},{"author":"Steven T. Dennis","title":"Senator Graham Says Terrorism War Expanding, Citing Africa Clash","description":"Senator Lindsey Graham said after meeting with Defense Secretary Jim Mattis about a deadly ambush in Niger that the war on terrorism will expand with more aggressive rules of engagement.","url":"https://www.bloomberg.com/news/articles/2017-10-20/senator-graham-says-terrorism-war-expanding-citing-africa-clash","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iqhYP_5llzVQ/v0/1200x800.jpg","publishedAt":"2017-10-20T21:46:00.863Z","id":"59ed52afcb1fe820c2086a1c","source":"bloomberg","keywords":["Senator Graham Says Terrorism War Expanding","Citing Africa Clash"]},{"author":"Ben Brody","title":"Realtors Go on an $11 Million Lobby Spree","description":"Washington’s most powerful trade associations spent more than $30 million on lobbying in the third quarter as Congress ramped up efforts to overhaul of the U.S. tax code.","url":"https://www.bloomberg.com/news/articles/2017-10-20/realtors-go-on-11-million-lobby-spree-as-tax-overhaul-heats-up","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iS4mXFb1uChM/v2/1200x675.jpg","publishedAt":"2017-10-20T23:07:14.968Z","id":"59ed52afcb1fe820c2086a1d","source":"bloomberg","keywords":["Realtors Go ","Million Lobby Spree"]},{"author":"Erik Wasson, Saleha Mohsin","title":"U.S. Posts Its Largest Budget Deficit Since 2013","description":"The U.S. posted its largest budget deficit since 2013 in the fiscal year that just ended, as a pickup in spending exceeded revenue gains.","url":"https://www.bloomberg.com/news/articles/2017-10-20/u-s-registers-largest-fiscal-year-budget-shortfall-since-2013","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iXanhYhR9lW0/v0/1200x835.jpg","publishedAt":"2017-10-20T18:00:00.019Z","id":"59ed52afcb1fe820c2086a1e","source":"bloomberg","keywords":["Posts Its Largest Budget Deficit Since "]},{"author":"Billy House","title":"Conservative Freedom Caucus Seeks Deal for Speedy Tax Overhaul","description":"The chairman of the conservative House Freedom Caucus is telling Republican leaders most of his group will support the GOP’s budget -- as long as the Ways and Means Committee marks up and passes a tax bill by the week of Oct. 30.","url":"https://www.bloomberg.com/news/articles/2017-10-20/conservative-freedom-caucus-seeks-deal-for-speedy-tax-overhaul","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/ieJQxag8agt4/v0/1200x800.jpg","publishedAt":"2017-10-20T20:16:23.432Z","id":"59ed52afcb1fe820c2086a1f","source":"bloomberg","keywords":["Conservative Freedom Caucus Seeks Deal ","Speedy Tax Overhaul"]},{"author":"Sara Clemence","title":"This $14.7 Million Atlanta Home With Bunker Said to Be 'Safest in America'","description":"Have trouble sleeping at night? Perhaps the anti-ballistic bedroom doors, 15,000-square-foot bunker, and off-grid water and power access at this Atlanta home will make you feel a little more secure.","url":"https://www.bloomberg.com/news/articles/2017-10-20/this-14-7-atlanta-home-with-bunker-said-to-be-safest-in-america","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i4o1LCJhHjxk/v1/1200x800.jpg","publishedAt":"2017-10-20T19:39:50.822Z","id":"59ed52afcb1fe820c2086a20","source":"bloomberg","keywords":["This ","Million Atlanta Home With Bunker Said ","Be ","Safest ","America"]},{"author":"Tony Robinson","title":"Pleasure and Pain: GE and United Earnings Calls in Contrast","description":"General Electric Co.’s post-earnings conference call Friday was a portrait of grabbing the bull by the horns. United Airlines’ call the day before was more like getting gored.","url":"https://www.bloomberg.com/news/articles/2017-10-20/ge-pacifies-and-united-provokes-a-contrast-in-earnings-calls","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i.niAxiO6A38/v0/1200x800.jpg","publishedAt":"2017-10-20T17:24:35.695Z","id":"59ed52afcb1fe820c2086a21","source":"bloomberg","keywords":["Pleasure ","Pain","GE ","United Earnings Calls ","Contrast"]},{"author":"Jessica Summers","title":"Oil Investors Jump Back Into the Fray","description":"Oil investors are back in the ring.","url":"https://www.bloomberg.com/news/articles/2017-10-20/investors-jump-back-into-the-fray-as-oil-market-revival-beckons","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i_EnIIhAA0Uk/v0/1200x800.jpg","publishedAt":"2017-10-20T23:05:48.458Z","id":"59ed52afcb1fe820c2086a22","source":"bloomberg","keywords":["Oil Investors Jump Back Into ","Fray"]},{"author":"Charles Penty, Esteban Duarte, Maria Tadeo","title":"Separatists Pledge to Fight On After Spain Moves to Oust Catalan Leaders","description":"Prime Minister Mariano Rajoy invoked the most far-reaching powers in the Spanish Constitution as he aimed to strike a decisive blow against the Catalan separatist campaign that’s divided the nation and put its economic expansion at risk.","url":"https://www.bloomberg.com/news/articles/2017-10-21/spain-will-seek-to-dismiss-catalan-president-rajoy-says","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iZ36gAs5udNI/v0/1200x800.jpg","publishedAt":"2017-10-21T11:46:15.585Z","id":"59ed52f0cb1fe820c2086c12","source":"bloomberg","keywords":["Separatists Pledge ","Fight On After Spain Moves ","Oust Catalan Leaders"]},{"author":"Jennifer Epstein","title":"Harry Reid Takes Time Out From Retirement to Blast Trump, Kelly","description":"Former Senate Majority Leader Harry Reid on Saturday urged White House Chief of Staff John Kelly to focus on managing President Donald Trump instead of picking fights with a congresswoman.","url":"https://www.bloomberg.com/news/articles/2017-10-21/harry-reid-takes-time-out-from-retirement-to-blast-trump-kelly","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/isErNbJq8xQU/v0/1200x800.jpg","publishedAt":"2017-10-21T20:15:43.995Z","id":"59ed52f0cb1fe820c2086c13","source":"bloomberg","keywords":["Harry Reid Takes Time Out From Retirement ","Blast Trump","Kelly"]},{"author":"Jennifer Epstein","title":"Democratic Committee Will Ban Funds From Donors That ‘Conflict’","description":"The Democratic National Committee voted to ban donations from certain corporate political action committees -- including those tied to tobacco companies, gun makers and payday lenders -- that “conflict” with the party’s platform.","url":"https://www.bloomberg.com/news/articles/2017-10-21/democratic-committee-to-ban-funds-from-donors-that-conflict","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iqpMKZB3aLGU/v0/1200x812.jpg","publishedAt":"2017-10-21T22:06:47.914Z","id":"59ed52f0cb1fe820c2086c14","source":"bloomberg","keywords":["Democratic Committee Will Ban Funds From Donors That ","Conflict"]},{"author":"","title":"Fox Renewed O'Reilly Contract Despite Knowing of Allegations","description":"New York (AP) -- The parent company of the Fox News Channel says it knew a news analyst planned to file a sexual harassment lawsuit against Bill O'Reilly when it renewed the popular personality's contract in February.","url":"https://www.bloomberg.com/news/articles/2017-10-21/fox-renewed-o-reilly-contract-despite-knowing-of-allegations","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/it4oFe3fkdBM/v0/1200x799.jpg","publishedAt":"2017-10-21T20:34:15.391Z","id":"59ed52f0cb1fe820c2086c15","source":"bloomberg","keywords":["Fox Renewed ","Reilly Contract Despite Knowing ","Allegations"]},{"author":"Jonathan Levin","title":"Blacked Out Puerto Rico Makes Long-Shot Pitch for Amazon's HQ2","description":"It’s a long shot, but that didn’t stop Puerto Rican officials from taking time away from hurricane recovery efforts to bid for Amazon Inc.’s second headquarters.","url":"https://www.bloomberg.com/news/articles/2017-10-21/blacked-out-puerto-rico-makes-long-shot-pitch-for-amazon-s-hq2","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iH4llKd814sM/v0/1200x819.jpg","publishedAt":"2017-10-21T19:03:38.607Z","id":"59ed52f0cb1fe820c2086c16","source":"bloomberg","keywords":["Blacked Out Puerto Rico Makes Long-Shot Pitch ","Amazon","HQ2"]},{"author":"Alex Wayne","title":"Trump Eyes Powell, Taylor and Yellen For Fed Chair","description":"President Donald Trump said he’s considering Stanford University economist John Taylor and Federal Reserve Governor Jerome Powell for the top job at the central bank, and indicated Fed Chair Janet Yellen remains in the running for renomination to a second four-year term.","url":"https://www.bloomberg.com/news/articles/2017-10-20/trump-says-he-may-pick-taylor-powell-for-fed-leadership-seats","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iWmHBI1IwtrU/v1/1200x805.jpg","publishedAt":"2017-10-20T19:17:59.115Z","id":"59ed52f0cb1fe820c2086c17","source":"bloomberg","keywords":["Trump Eyes Powell","Taylor ","Yellen For Fed Chair"]},{"author":"Chris Rovzar","title":"The Perfect Fall Foliage Drive Is Along Maine’s Coastal Route 1","description":"A trip up the coast in October, when most of the tourists have left, is a great time to experience the beauty of the season—and discover the real personality of the place.","url":"https://www.bloomberg.com/news/features/2017-10-19/the-perfect-fall-foliage-drive-is-along-maine-s-coastal-route-1","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i6iDdVM.zcUo/v1/1200x800.jpg","publishedAt":"2017-10-19T08:13:09.718Z","id":"59ed52f0cb1fe820c2086c18","source":"bloomberg","keywords":["The Perfect Fall Foliage Drive Is Along Maine","Coastal Route "]},{"author":"Justin Sink","title":"Trump Says Raqqa Defeat Signals Islamic State's End ‘In Sight’","description":"President Donald Trump hailed this week’s victory by Kurdish-led forces over Islamic State in the terrorist organization’s Raqqa headquarters as a “critical breakthrough” and a signal that end of the self-professed caliphate is “in sight.”","url":"https://www.bloomberg.com/news/articles/2017-10-21/trump-says-raqqa-defeat-signals-islamic-state-s-end-in-sight","urlToImage":"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iIF7oWaS_FwQ/v0/1200x675.jpg","publishedAt":"2017-10-21T17:51:11.128Z","id":"59ed52f0cb1fe820c2086c19","source":"bloomberg","keywords":["Trump Says Raqqa Defeat Signals Islamic State","End ","In Sight"]}];
-        $scope.radio = {
-            "option": "associated-press"
-        };
-
-        var request = function() {
-            console.log($scope.radio);
-
-            $scope.fromDate = $( "#from_datepicker" ).datepicker("getDate").toISOString().split('.')[0]+"Z";
-            $scope.toDate = $( "#to_datepicker" ).datepicker("getDate").toISOString().split('.')[0]+"Z";
-
-            $http.get("/api/search/repo/" + $scope.radio.option + "/" 
-                + $scope.fromDate + "/" 
-                + $scope.toDate).then(function(response) {
-                $scope.data = response.data;
-                return $scope.renderD3View($scope.data);
-            });
-        };
-
-        $scope.$on('$viewContentLoaded', function() {
-            request();
-        });
-
-        $scope.grabArticlesForSource = function() {
-            request();
-        }
-
-        $scope.renderD3View = function(data) {
-            /* process data into useable format: stores keyword in a map with an array of source data */
-            var keywords = {};
-
-            for (var i in data) {
-                for (var j in data[i].keywords) {
-
-                    var keyword = data[i].keywords[j];
-                    var dataToPush = {
-                        "source": data[i].source,
-                        "publishedAt": data[i].publishedAt,
-                        "title": data[i].title,
-                        "url": data[i].url
-                    };
-
-                    if (keywords[keyword] == undefined) {
-                        keywords[keyword] = [dataToPush];
-                    } else {
-                        keywords[keyword].push(dataToPush);
-                    }
-                }
-            }
-
-            var d3Valid = {
-                "children": []
-            };
-            for (var k in keywords) {
-                var toAdd = {}
-                toAdd["keyword"] = k;
-                toAdd["source"] = keywords[k][0]["source"];
-                toAdd["data"] = [];
-                for (var article in keywords[k]) {
-                    toAdd["data"].push(keywords[k][article]);
-                }
-                d3Valid["children"].push(toAdd);
-            }
-
-            /* rendering */
-            var width = 700;
-            var height = 700;
-              d3.select("svg").remove();
-
-            var svg = d3.select("#container").append("svg")
-              .attr("width", width)
-              .attr("height", height)
-              .attr("font-family", "sans-serif")
-              .attr("font-size", 10)
-              .attr("text-anchor", "middle");
-
-            var format = d3.format(",d");
-
-            var color = d3.scaleOrdinal(d3.schemeCategory20c);
-
-            var pack = d3.pack()
-                .size([width, height])
-                .padding(1.5);
-
-            var root = d3.hierarchy(d3Valid)
-                .sum(function(d) {
-                    if (d.data != undefined) {
-                        return d.data.length;
-                    } else {
-                        return 0;
-                    }
-                })
-                .each(function(d) {
-                    d.id = d.data.keyword && d.data.keyword.replace(/ /g, '');
-                    d.package = d.data.source;
-                    d.class = d.data.keyword;
-                    d.first_letter = d.data.keyword && d.data.keyword.charAt(0).toLowerCase();
-                    d.other_data = d.data.data;
-                });
-
-            var node = svg.selectAll(".node")
-                .data(pack(root).leaves());
-
-            node.exit().remove();
-            node.exit().selectAll("circle").remove();
-            node.exit().selectAll("title").remove();
-            node.exit().selectAll("clipPath").remove();
-            node.exit().selectAll("text").remove();
-            var links = [];
-
-            var group = node.enter().append("g")
-            .merge(node)
-                .attr("class", "node")
-                .attr("transform", function(d) {
-                    return "translate(" + d.x + "," + d.y + ")";
-                });
-
-            group.append("circle")
-                .attr("id", function(d) {
-                    return d.id;
-                })
-                .attr("r", function(d) {
-                    return d.r;
-                })
-                .style("fill", function(d) {
-                    return color(d.first_letter);
-                });
-
-            group.append("clipPath")
-                .attr("id", function(d) {
-                    return "clip-" + d.id;
-                })
-                .append("use")
-                .attr("xlink:href", function(d) {
-                    return "#" + d.id;
-                });
-
-            group.append("text")
-                .on("mouseover", function(d) {
-                    console.log(d);
-
-                    var links = [];
-                    for (var item in d.other_data) {
-                        links.push({
-                            "title": d.other_data[item].title,
-                            "url": d.other_data[item].url
-                        });
-                    }
-
-                    var n = d3.select(".info-box-inner-data-text")
-                        .selectAll("p")
-                        .data(links);
-
-                    n.exit().remove();
-
-                    n.enter()
-                        .append("p")
-                        .merge(n)
-                        .call(function(selection) {
-                            d3.select(".info-box-wrapper")
-                                .classed("hidden", false)
-                                .style("font-weight", "bolder")
-                                .style("font-size", "11px")
-                                .style("left", d.x + d.parent.x + d.r - 10 + "px")
-                                .style("top", d.y + d.parent.value - 15 + "px");
-                        })
-                        .text(function(d) {
-                            return d.title
-                        });
-
-                })
-                .on("click", function(d) {
-                    // return if item already in bookmarks
-                    for(var link in links) {
-                      for(var item in d.other_data) {
-                        if (links[link].title == d.other_data[item].title) {
-                          return
-                        }
-                      }
-                    }
-
-                    for (var item in d.other_data) {
-                        links.push({
-                            "title": d.other_data[item].title,
-                            "url": d.other_data[item].url,
-                            "source": d.other_data[item].source,
-                            "publishedAt": d.other_data[item].publishedAt
-                        });
-                    }
-
-                    var n = d3.select("#bookshelf")
-                        .selectAll("li")
-                        .data(links);
-
-                    n.exit().remove();
-
-                    n.enter()
-                        .append("li")
-                        .append("a")
-                        .attr("href", function(d) { return d.url})
-                        .attr("target", "_blank")
-                        .text(function(d) {
-                            return d.title
-                        })
-                        .select(function() {
-                          return this.parentNode;
-                        })
-                        .append("br")
-                        .select(function() {
-                          return this.parentNode;
-                        })
-                        .append("span")
-                        .attr("id", "source")
-                        .style("font-style","italic")
-                        .style("padding-right","10em")
-                        .text(function(d) {
-                            return d.source;
-                        })
-                        .select(function() {
-                          return this.parentNode;
-                        })
-                        .append("span")
-                        .attr("id", "date")
-                        .style("font-size","smaller")
-                        .style("position","absolute")
-                        .style("right","5em")
-                        .text(function(d) {
-                            var outputDate = d.publishedAt;
-                            if (outputDate != null) {
-                              outputDate = new Date(outputDate).toString().split(/\d\d\:/)[0].trim();
-                            }
-                            return outputDate;
-                        });
-                })
-                .on("mouseout", function(d) {
-                    d3.select(".info-box-wrapper")
-                        .classed("hidden", true)
-
-                    var n = d3.select(".info-box-inner-data-text")
-                        .selectAll("p");
-
-                    n.exit().remove();
-                })
-                .attr("clip-path", function(d) {
-                    return "url(#clip-" + d.id + ")";
-                })
-                .selectAll("tspan")
-                .data(function(d) {
-                    return d.class.split(/(?=[A-Z][^A-Z])/g);
-                })
-                .enter().append("tspan")
-                .attr("x", 0)
-                .attr("y", function(d, i, nodes) {
-                    return 13 + (i - nodes.length / 2 - 0.5) * 10;
-                })
-                .text(function(d) {
-                    return d;
-                });
-
-            group.append("title")
-                .text(function(d) {
-                    return d.class + "\n" + format(d.value);
-                });
-
-           var drawer = d3.select("#expand-draw")
-                    .on("click", function(d) {
-                        d3.select("#right-panel")
-                        .transition()
-                        .duration(1050)
-                        .style("width", "0px");
-                      //.transition()
-                      //  .delay(1500);
-                        //.attr("src", "/icons8-private-pv2-filled-50.png")
-                    });
-        }
-
-        $scope.renderD3View($scope.data);
-    });
-</script>
-
-
 <div ng-app="app" ng-controller="controller">
-
-<div class="info-box-wrapper info-box hidden" style="top: 100px; left:200px; display:block; opacity: 0.90">
-  <div class="info-box-arrow-wrapper info-box-arrow"></div>
-  <div class="info-box-innerdata">
-  <span class="info-box-inner-data-text"></span>
-</div>
-</div>
-
-<div id="left-panel" class="widget">
-<fieldset>
-    <legend class="title">Sources:</legend><br />
-     <input  ng-repeat-start="source in sources | orderBy: 'name'" type='radio' name='radio-1' id='radio-{{ $index }}' ng-model='radio.option' value='{{ source.id }}' class="ui-checkboxradio ui-helper-hidden-accessible"> 
-     <label for='radio-{{ $index }}' id='{{source.id}}' class="ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label" ng-class="{'ui-state-active': $parent.radio.option == source.id }">{{ source.name }}</label>
-     <br ng-repeat-end />
-  </fieldset>
-</div>
-
-<div id="top-panel">
+  <div class="info-box-wrapper info-box hidden" style="top: 100px; left:200px; display:block; opacity: 0.90">
+    <div class="info-box-innerdata">
+      <span class="info-box-inner-data-text"></span>
+    </div>
+  </div>
+  <div id="left-panel" class="widget">
+    <fieldset>
+      <legend class="title">Sources:</legend>
+      <br />
+      <input  ng-repeat-start="source in sources | orderBy: 'name'" type='radio' name='radio-1' id='radio-{{ $index }}' ng-model='radio.option' value='{{ source.id }}' class="ui-checkboxradio ui-helper-hidden-accessible"> 
+      <label for='radio-{{ $index }}' id='{{source.id}}' class="ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label" ng-class="{'ui-state-active': $parent.radio.option == source.id }">{{ source.name }}</label>
+      <br ng-repeat-end />
+    </fieldset>
+  </div>
+  <div id="top-panel">
     <h1 class="title">News History</h1>
-
     <input type="text" id="from_datepicker" class="datepicker">
     <input type="text" id="to_datepicker" class="datepicker">
-    <span> <a><img src="https://png.icons8.com/?id=9978&size=50" style="cursor:pointer" ng-click="grabArticlesForSource()"/></a> </span>
- 
-</div>
-
-<div id="right-panel" style="max-width: 35%">
-<h4 class="title">   <img id="expand-draw" src="/expand.png" style="position:absolute; cursor:pointer; display:inline-block; vertical-align: center; margin-left:1050px; margin-top: 300px" /> &nbsp;&nbsp; Bookmarks &nbsp;&nbsp;</h4>
-<ul id="bookshelf">
-</ul>
-</div>
-
-
-<div id="container" class="app">
-<!--
-    <svg width="700" height="700" font-family="sans-serif" font-size="13" text-anchor="middle"></svg>
-    -->
-</div>
-    <div id="footer">
-        Powered by <a href="https://newsapi.org/">News API</a> © 2017
+    <span> <a><img src="images/go.png" style="cursor:pointer" ng-click="grabArticlesForSource()"/></a> </span>
+  </div>
+  <div id="right-panel" style="max-width: 35%">
+    &nbsp;
+    <img id="expand-draw" src="/expand.png" style="width:20px;height:20px"/>
+    <span class="title" >  &nbsp;&nbsp; Reading List &nbsp;&nbsp;</span>
+    <div id="bookshelf-container" style="padding-top:1em">
+      <ul id="bookshelf"></ul>
     </div>
-
+  </div>
+  <div id="container" class="app"></div>
+  <div id="footer">
+    Powered by <a href="https://newsapi.org/">News API</a> © 2017
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+      <input type="hidden" name="cmd" value="_s-xclick">
+      <input type="hidden" name="hosted_button_id" value="V2M3DR4FVE5PY">
+      <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+      <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+    </form>
+  </div>
 </div>
 </body>
 </html>
-
-
