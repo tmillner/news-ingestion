@@ -272,7 +272,7 @@
         })
         .selectAll("tspan")
         .data(function(d) {
-          return d.class.split(/(?=[a-z][^a-z])/g);
+          return d.class.split(/(?=[^a-z-])/g);
         })
         .enter().append("tspan")
         .attr("x", 0)
