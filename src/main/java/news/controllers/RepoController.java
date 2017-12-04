@@ -86,7 +86,7 @@ public class RepoController {
 
         Integer requestedDiff = Days.daysBetween(dtFrom, dtTo).getDays();
         if (requestedDiff > 31) {
-            return ResponseEntity.badRequest().body("Sorry, range must be <= 31 days");
+            return ResponseEntity.badRequest().body("{\"message\": \"Sorry, range must be <= 31 days\"}");
         }
         List<Article> articles = storageService.getArticles(source, validFrom, validTo);
         log.info(articles.toString());

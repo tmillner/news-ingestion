@@ -57,6 +57,12 @@
     <input type="text" id="from_datepicker" class="datepicker">
     <input type="text" id="to_datepicker" class="datepicker">
     <span> <a><img src="images/go.png" style="cursor:pointer" ng-click="grabArticlesForSource()"/></a> </span>
+    <div ng-if="dateRangeError">
+        <span class="error">Start to End date must be 0 - 31 days</span>
+    </div>
+    <div ng-if="serverError">
+        <span class="error">Uh-oh. Something went wrong on our side.</span>
+    </div>
   </div>
   <div id="right-panel" style="max-width: 35%">
     &nbsp;

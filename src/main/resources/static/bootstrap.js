@@ -9,8 +9,8 @@
     buttonImageOnly: true,
     buttonText: "Select date",
     showAnim: "drop",
-    autoSize: true
-
+    autoSize: true,
+    minDate: new Date(2017, 9 - 1, 17)
   };
 
   $(function() {
@@ -19,7 +19,7 @@
 
   /** Default initializations **/
   $(function() {
-    $("#from_datepicker").datepicker("setDate", "-31d");
+    $("#from_datepicker").datepicker("setDate", "-14d");
     $("#to_datepicker").datepicker("setDate", "-0d");
   });
 

@@ -144,3 +144,9 @@ span.info-box-inner-data-text a {
 a:visited {
   color: #264ca9;
 }
+
+.error {
+  color: red;
+  font-style: italic;
+  font-size: small;
+}

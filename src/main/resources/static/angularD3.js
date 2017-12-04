@@ -8,15 +8,29 @@
       "option": "associated-press"
     };
 
+    $scope.dateRangeError = false;
+    $scope.serverError = false;
+
     var request = function() {
       $scope.fromDate = $("#from_datepicker").datepicker("getDate").toISOString().split('.')[0] + "Z";
       $scope.toDate = $("#to_datepicker").datepicker("getDate").toISOString().split('.')[0] + "Z";
 
+      $scope.dateRangeError = false;
+      $scope.serverError = false;
+
       $http.get("/api/search/repo/" + $scope.radio.option + "/" +
         $scope.fromDate + "/" +
         $scope.toDate).then(function(response) {
-        $scope.data = response.data;
-        return $scope.renderD3View($scope.data);
+          $scope.data = response.data;
+          console.log(response.data);
+          return $scope.renderD3View($scope.data);
+      }, function(response) {
+          if (response.data.message.includes("Sorry")){
+            $scope.dateRangeError = true;
+          }
+          if (response.data.error != null && response.data.error.includes("Internal Server Error")){
+            $scope.serverError = true;
+          }
       });
     };
 
@@ -258,7 +272,7 @@
         })
         .selectAll("tspan")
         .data(function(d) {
-          return d.class.split(/(?=[A-Z][^A-Z])/g);
+          return d.class.split(/(?=[a-z][^a-z])/g);
         })
         .enter().append("tspan")
         .attr("x", 0)

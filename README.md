@@ -1,1 +1,1 @@
-http://news-history.org
+https://news-history.org

@@ -152,6 +152,11 @@ public class StorageProcessingService implements StorageService {
                 boolean addKeyword = true;
                 String keyword = m.group().trim();
 
+                // Skip if starts with dash
+                if(keyword.startsWith("-")) {
+                    continue;
+                }
+
                 for (String blacklistedKeyword : blacklist) {
                     if (keyword.equalsIgnoreCase(blacklistedKeyword.trim())) {
                         addKeyword = false;
